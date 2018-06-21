@@ -1,0 +1,13 @@
+# https://docs.travis-ci.com/user/languages/ruby
+language: ruby
+cache: bundler
+
+rvm:
+- 2.5.1
+
+script:
+  - bundle exec rspec
+
+# https://docs.travis-ci.com/user/notifications
+notifications:
+  email: false
