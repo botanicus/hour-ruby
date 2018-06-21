@@ -6,4 +6,5 @@ end
 
 group(:spec) do
   gem 'rspec'
+  gem 'coveralls'
 end

@@ -1,4 +1,7 @@
 require "hour"
+require "coveralls"
+
+Coveralls.wear!
 
 describe Hour do
   describe ".parse" do
