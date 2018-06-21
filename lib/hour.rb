@@ -62,7 +62,7 @@ class Hour
 
   # TODO: document and write tests.
   def self.from_time(time)
-    self.new(h: time.hours, m: time.minutes, s: time.seconds)
+    self.new(time.hour, time.min, time.sec)
   end
 
   # Build an hour instance from an hour string.
@@ -71,12 +71,12 @@ class Hour
   #     Hour.parse("1:00", "%h:%m?") # Will work with "1:00" or just "1".
   #
   # TODO: Implement me, test me and document me.
-  def self.parse(string, formatting_string = nil)
-    argument_array = serialised_hour.split(':').map(&:to_i)
+  def self.parse(serialised_hour, formatting_string = nil)
+    args = serialised_hour.split(':').map(&:to_i)
 
-    case argument_array.size
+    case args.length
     when 3
-      self.new(*argument_array)
+      self.new(*args)
     when (0..2)
       # TODO: if formatting_string ...
       raise ArgumentError.new("If format is not H:M:S, formatting string must be provided.")
@@ -172,6 +172,18 @@ class Hour
 
   def to_time(today = Time.now)
     Time.new(today.year, today.month, today.day, self.hours, self.minutes_over_the_hour)
+  end
+
+  [:==, :eql?, :<, :<=, :>, :>=, :<=>].each do |method_name|
+    define_method(method_name) do |anotherHour|
+      if anotherHour.is_a?(self.class)
+        self.seconds.total.send(method_name, anotherHour.seconds.total)
+      # elsif anotherHour.is_a?(Time)
+      #   self.send(method_name, Hour.now)
+      else
+        raise TypeError.new("#{self.class}##{method_name} expects #{self.class} or Time object.")
+      end
+    end
   end
 
   private
