@@ -18,9 +18,27 @@ describe Hour do
   end
 
   describe "#to_s" do
-    pending "implement me" #do
-      # TODO
-    #end
+    it "pads minutes and seconds with zeros" do
+      hour = Hour.new(1, 9, 5)
+      expect(hour.to_s).to eql('1:09:05')
+    end
+
+    it "omits hours if it's less than 60 minutes" do
+      hour = Hour.new(m: 52)
+      expect(hour.to_s).to eql('52:00')
+    end
+
+    context "with seconds disabled" do
+      it "returns %HH:%MM" do
+        hour = Hour.new(1, 9, false)
+        expect(hour.to_s).to eql('1:09')
+      end
+    end
+
+    context "with hours disabled" do
+      # This would be 90:00 for 1.5 hours.
+      pending "not implemented"
+    end
   end
 
   describe "#+" do

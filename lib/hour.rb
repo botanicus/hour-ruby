@@ -56,13 +56,13 @@ class Hour
   end
 
   # TODO: Test me and document me.
-  def self.now
-    self.from_time(Time.now)
+  def self.now(**opts)
+    self.from_time(Time.now, **opts)
   end
 
   # TODO: document and write tests.
-  def self.from_time(time)
-    self.new(time.hour, time.min, time.sec)
+  def self.from_time(time, s: true)
+    self.new(time.hour, time.min, s ? time.sec : false)
   end
 
   # Build an hour instance from an hour string.
@@ -71,17 +71,17 @@ class Hour
   #     Hour.parse("1:00", "%h:%m?") # Will work with "1:00" or just "1".
   #
   # TODO: Implement me, test me and document me.
-  def self.parse(serialised_hour, formatting_string = nil)
+  def self.parse(serialised_hour, s: true)
     args = serialised_hour.split(':').map(&:to_i)
 
-    case args.length
-    when 3
+    if args.length == 3 && s
       self.new(*args)
-    when (0..2)
-      # TODO: if formatting_string ...
-      raise ArgumentError.new("If format is not H:M:S, formatting string must be provided.")
-    when (4..Float::INFINITY) # Until we have infinite ranges like (4..) in Ruby 2.6.
-      raise ArgumentError, "Too many arguments."
+    elsif args.length == 2 && !s
+      self.new(*(args << false))
+    elsif ((0..2).include?(args.length) && s) || ((0..1).include?(args.length) && !s)
+      raise ArgumentError, "Too few segments (#{args.inspect})."
+    elsif ((4..Float::INFINITY).include?(args.length) && s) || ((3..Float::INFINITY).include?(args.length) && !s)
+      raise ArgumentError, "Too many segments (#{args.inspect})."
     end
   end
 
@@ -121,7 +121,7 @@ class Hour
       raise ArgumentError.new("Minutes must be a number between 0 and 60.")
     end
 
-    if @s > 60
+    if @s.respond_to?(:round) && @s > 60
       raise ArgumentError.new("Seconds must be a number between 0 and 60.")
     end
   end
@@ -132,7 +132,15 @@ class Hour
   def +(other)
     hours = @h + other.h + (@m + other.m + ((@s + other.s) / 60)) / 60
     minutes = (@m + other.m + ((@s + other.s) / 60)) % 60
-    seconds = (@s + other.s) % 60
+
+    if @s && other.s
+      seconds = (@s + other.s) % 60
+    elsif (!@s) && (!other.s)
+      seconds = false
+    else
+      raise "TODO: how to resolve this?"
+    end
+
     self.class.new(hours, minutes, seconds)
   end
 
@@ -159,13 +167,17 @@ class Hour
   #     Hour.new(m: 1, s: 10).seconds.value # => 10
   #     Hour.new(1, 45, 10  ).seconds.total # => (1 * 60 * 60) + (45 * 60) + 10
   def seconds
-    SecondUnit.new(self)
+    SecondUnit.new(self) if @s
   end
 
-  # TODO: Add formatting string support.
-  # TODO: Pad 0s. I. e. "#{self.hours}:#{format('%02d', self.minutes_over_the_hour)}"
+  # Returns string representation of the hour instance.
+  #
+  #     Hour.new(m: 1, s: 10 ).to_s # => "1:10"
+  #     Hour.new(1, 45, false).to_s # => "1:45"
+  #
+  # TODO: Allow formatting string (to format hours to 2 digits etc).
   def to_s(format = nil)
-    "#{@h}:#{@m}:#{@s}"
+    [(@h unless @h.zero?), format('%02d', @m), (format('%02d', @s) if @s)].compact.join(':')
   end
 
   alias_method :inspect, :to_s
