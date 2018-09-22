@@ -28,10 +28,13 @@ puts "It's #{hour.to_s}!"
 puts "The system time is #{Hour.now}!"
 ```
 
+# Development
+
+Use `vagrant up` to start a VM. Once everything's ready, it's `vagrant ssh`. Upon login, you'll be connected to a tmux session. To sleep, it's `vagrant suspend`.
+
 # TODO
 
 - Rubocop.
-- Travis.
 - Release version 0.1.
 
 [Gem version]: https://rubygems.org/gems/hour-ruby
