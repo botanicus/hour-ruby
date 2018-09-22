@@ -3,6 +3,7 @@ PROJECT_NAME = File.basename(Dir.pwd)
 Vagrant.configure('2') do |config|
   config.vm.provider 'virtualbox'
   config.vm.box = 'generic/arch'
+  config.vm.hostname = "vg-#{PROJECT_NAME}"
 
   config.vm.synced_folder '.', "/home/vagrant/#{PROJECT_NAME}"
 
@@ -10,7 +11,10 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'file', source: '~/.ssh/id_rsa', destination: '~/.ssh/id_rsa'
 
   # Install project dependencies.
-  config.vm.provision 'shell', inline: 'pacman -Syu --noconfirm && pacman -S --noconfirm ruby'
+  config.vm.provision 'shell', inline: "
+    echo #{PROJECT_NAME} > /etc/projectname
+    pacman -Syu --noconfirm && pacman -S --noconfirm ruby
+  "
 
   # Install the dotfiles.
   config.vm.provision 'shell', privileged: false, inline: '
@@ -22,12 +26,4 @@ Vagrant.configure('2') do |config|
   # Install the project.
   config.vm.provision 'shell', privileged: false,
     inline: "gem install bundler --no-rdoc --no-ri && cd #{PROJECT_NAME} && bundle"
-
-  # TODO:
-  # install git hooks
-  # # End-user tweaks.
-  # config.vm.provision 'shell', privileged: false,
-  #   inline: 'echo "export PATH=~/.gem/ruby/2.5.0/bin:\$PATH" > ~/.zshrc'
-  # config.vm.provision 'shell', privileged: false,
-  #   inline: "echo 'cd #{PROJECT_NAME}' >> ~/.bashrc"
 end
