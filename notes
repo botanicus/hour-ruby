@@ -1,0 +1,27 @@
+  # Currently unused, but it might be in the future.
+  # def *(rate)
+  #   (@minutes * (rate / 60.0)).round(2)
+  # end
+
+  # Doesn't work if it's smaller - larger:
+  # Hour.parse('0:58') - Hour.parse('1:00')
+  # => -1:58
+  [:+, :-].each do |method_name|
+    define_method(method_name) do |hour_or_minutes|
+      if hour_or_minutes.is_a?(self.class)
+        self.class.new(0, @minutes.send(method_name, hour_or_minutes.minutes))
+      elsif hour_or_minutes.is_a?(Integer)
+        self.class.new(0, @minutes.send(method_name, hour_or_minutes))
+      else
+        raise TypeError.new("Hour or Integer (for minutes) expected, got #{hour_or_minutes.class}.")
+      end
+    end
+  end
+
+  def /(ratio)
+    self.class.new(0, self.minutes / ratio)
+  end
+- parse 0:1:20
+- format 1:30 / 90min
+- hr: 1, min: 20, sec: false to disable sec or sth like that.
+
