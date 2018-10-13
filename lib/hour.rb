@@ -95,7 +95,7 @@ class Hour
       raise ArgumentError.new("Use either minutes OR seconds, not both.")
     end
 
-    if minutes > 0
+    if minutes > 0 || (minutes == 0 && seconds == 0)
       self.new(h: minutes / 60, m: minutes % 60)
     else
       self.from(minutes: seconds / 60) + self.new(s: seconds % 60)
@@ -181,6 +181,13 @@ class Hour
   end
 
   alias_method :inspect, :to_s
+
+  # Provisional.
+  def to_decimal
+    decimal = (@m / 60.0) + (@s / 3600.0)
+    "#{@h}.#{decimal}"
+    @h + decimal
+  end
 
   def to_time(today = Time.now)
     Time.new(today.year, today.month, today.day, self.hours, self.minutes_over_the_hour)
