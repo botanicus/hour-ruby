@@ -143,6 +143,11 @@ class Hour
 
     self.class.new(hours, minutes, seconds)
   end
+  
+  def *(integer)
+    raise ArgumentError, "must be an integer" unless integer.integer?
+    self.class.new(@h * integer, @m * integer, @s * integer)
+  end
 
   # Returns a decorator providing convenience methods for working with hours.
   #
