@@ -143,7 +143,26 @@ class Hour
 
     self.class.new(hours, minutes, seconds)
   end
-  
+
+  def -(other)
+    if other.to_decimal > self.to_decimal
+      raise ArgumentError, "Negative hours not supported"
+    end
+
+    hours = @h - other.h - (@m - other.m - ((@s - other.s) / 60)) / 60
+    minutes = (@m - other.m - ((@s - other.s) / 60)) % 60
+
+    if @s && other.s
+      seconds = (@s - other.s) % 60
+    elsif (!@s) && (!other.s)
+      seconds = false
+    else
+      raise "TODO: how to resolve this?"
+    end
+
+    self.class.new(hours, minutes, seconds)
+  end
+
   def *(integer)
     raise ArgumentError, "must be an integer" unless integer.integer?
     self.class.from(seconds: (@h * integer * 3600) + (@m * integer * 60) + (@s * integer))

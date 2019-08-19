@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'hour-ruby'
-  s.version     = '0.0.3'
+  s.version     = '0.0.5'
   s.authors     = ['James C Russell']
   s.email       = 'james+rubygems@botanicus.me'
   s.homepage    = 'http://github.com/botanicus/hour-ruby'
