@@ -3,12 +3,12 @@
 
 Gem::Specification.new do |s|
   s.name        = 'hour-ruby'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.authors     = ['James C Russell']
-  s.email       = 'james@101ideas.cz'
+  s.email       = 'james+rubygems@botanicus.me'
   s.homepage    = 'http://github.com/botanicus/hour-ruby'
-  s.summary     = ''
-  s.description = "#{s.summary}."
+  s.summary     = "Library for handling hour arithmetics."
+  s.description = "#{s.summary} such as addition, multiplication, conversion to decimal etc."
   s.license     = 'MIT'
   s.metadata['yard.run'] = 'yri' # use 'yard' to build full HTML docs.
 
