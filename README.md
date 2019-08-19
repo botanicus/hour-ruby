@@ -17,7 +17,7 @@ gem install hour-ruby
 # Usage
 
 ```ruby
-require "hour"
+require 'hour'
 
 hour = Hour.from(minutes: 85)
 puts "It's #{hour.hours.value}:#{hour.minutes.value}!"
@@ -27,15 +27,6 @@ puts "It's #{hour.to_s}!"
 
 puts "The system time is #{Hour.now}!"
 ```
-
-# Development
-
-Use `vagrant up` to start a VM. Once everything's ready, it's `vagrant ssh`. Upon login, you'll be connected to a tmux session. To sleep, it's `vagrant suspend`.
-
-# TODO
-
-- Rubocop.
-- Release version 0.1.
 
 [Gem version]: https://rubygems.org/gems/hour-ruby
 [Build status]: https://travis-ci.org/botanicus/hour-ruby
