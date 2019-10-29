@@ -3,10 +3,10 @@ language: ruby
 cache: bundler
 
 rvm:
-- 2.5.1
+- 2.6.5
 
 script:
-  - bundle exec rspec
+- bundle exec rspec
 
 # https://docs.travis-ci.com/user/notifications
 notifications:
